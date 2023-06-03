@@ -46,9 +46,19 @@ def get_conjunto_tarefas() -> list:
     return tarefas
 
 
+def get_prioridade() -> str:
+    prioridade = st.selectbox(
+        'Escolha a prioridade',
+        options=["Prioridade Fixa", "Prioridade Dinâmica"]
+    )
+    st.info(prioridade)
+    return prioridade
+
+
 def main():
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
+    prioridade = get_prioridade()
 
 
 if __name__ == "__main__":
