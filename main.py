@@ -47,11 +47,10 @@ def get_conjunto_tarefas() -> list:
 
 
 def cria_dataframe_tarefas(tarefas) -> pd.DataFrame():
-    if tarefas[0][0]:
-        df = pd.DataFrame(tarefas, columns = [0, 1]).rename(columns={0:'Custo',1: 'Período'})
-        df.insert(loc=0, column='Tarefa', value=df.index+1)
-        st.write(df)
-        return df
+    df = pd.DataFrame(tarefas, columns = [0, 1]).rename(columns={0:'Custo',1: 'Período'})
+    df.insert(loc=0, column='Tarefa', value=df.index+1)
+    st.write(df)
+    return df
 
 
 def get_utilizacao_processador(df) -> bool:
@@ -98,17 +97,18 @@ def cria_gráfico(df) -> None:
 def main():
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
-    df = cria_dataframe_tarefas(tarefas)
-    if not get_utilizacao_processador(df):
-        st.warning(
-            '''
-            O Conjunto de tarefas não é Escalonável, 
-            pois a utilização do processador é maior do que 100%.
-            '''
-        )
-    else:
-        prioridade = get_prioridade()
-        algoritmos = get_algoritmo(prioridade)
+    if tarefas[0][0]:
+        df = cria_dataframe_tarefas(tarefas)
+        if not get_utilizacao_processador(df):
+            st.warning(
+                '''
+                O Conjunto de tarefas não é Escalonável, 
+                pois a utilização do processador é maior do que 100%.
+                '''
+            )
+        else:
+            prioridade = get_prioridade()
+            algoritmos = get_algoritmo(prioridade)
 
 
 if __name__ == "__main__":
