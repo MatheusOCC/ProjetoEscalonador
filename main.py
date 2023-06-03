@@ -54,6 +54,13 @@ def cria_dataframe_tarefas(tarefas) -> pd.DataFrame():
         return df
 
 
+def get_utilizacao_processador(df) -> bool:
+    U = 0
+    for ind in df.index:
+        U = U + int(df['Custo'][ind]) / int(df['Período'][ind])
+    return (U <= 1)
+
+
 def get_prioridade() -> str:
     prioridade = st.selectbox(
         'Escolha a prioridade',
@@ -76,8 +83,16 @@ def main():
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
     df = cria_dataframe_tarefas(tarefas)
-    prioridade = get_prioridade()
-    algoritmos = get_algoritmo(prioridade)
+    if not get_utilizacao_processador(df):
+        st.warning(
+            '''
+            O Conjunto de tarefas não é Escalonável, 
+            pois a utilização do processador é maior do que 100%.
+            '''
+        )
+    else:
+        prioridade = get_prioridade()
+        algoritmos = get_algoritmo(prioridade)
 
 
 if __name__ == "__main__":
