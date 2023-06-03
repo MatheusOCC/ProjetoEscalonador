@@ -55,10 +55,20 @@ def get_prioridade() -> str:
     return prioridade
 
 
+def get_algoritmo(prioridade) -> str:
+    if prioridade == "Prioridade Dinâmica":
+        algoritmos=['EDF']
+    else:
+        algoritmos = ["Rate-Monotonic"]
+    st.info(algoritmos)
+    return st.radio("Escolha o algoritmo",options=algoritmos)
+
+
 def main():
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
     prioridade = get_prioridade()
+    algoritmos = get_algoritmo(prioridade)
 
 
 if __name__ == "__main__":
