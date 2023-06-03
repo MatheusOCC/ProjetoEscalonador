@@ -79,6 +79,22 @@ def get_algoritmo(prioridade) -> str:
     return st.radio("Escolha o algoritmo",options=algoritmos)
 
 
+def rate_monotonic_scheduling(df) -> pd.DataFrame():
+    pass
+
+
+def earliest_deadline_first_scheduling(df) -> pd.DataFrame():
+    pass
+ 
+
+def esta_plenamente_utilizado() -> bool:
+    pass
+ 
+
+def cria_gráfico(df) -> None:
+    pass
+
+
 def main():
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
