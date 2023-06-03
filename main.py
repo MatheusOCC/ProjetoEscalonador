@@ -1,5 +1,5 @@
 import streamlit as st
-
+import pandas as pd
 
 def cria_cabecalho():
     st.title('Projeto Escalonador')
@@ -46,6 +46,14 @@ def get_conjunto_tarefas() -> list:
     return tarefas
 
 
+def cria_dataframe_tarefas(tarefas) -> pd.DataFrame():
+    if tarefas[0][0]:
+        df = pd.DataFrame(tarefas, columns = [0, 1]).rename(columns={0:'Custo',1: 'Período'})
+        df.insert(loc=0, column='Tarefa', value=df.index+1)
+        st.write(df)
+        return df
+
+
 def get_prioridade() -> str:
     prioridade = st.selectbox(
         'Escolha a prioridade',
@@ -67,6 +75,7 @@ def get_algoritmo(prioridade) -> str:
 def main():
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
+    df = cria_dataframe_tarefas(tarefas)
     prioridade = get_prioridade()
     algoritmos = get_algoritmo(prioridade)
 
