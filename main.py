@@ -8,7 +8,7 @@ def cria_cabecalho():
         st.caption(
             '''
             Autores:
-            \n* John Bryan
+            \n* John Bryan Lemos
             \n* Matheus Oliver de Carvalho Cerqueira
             '''
         )
