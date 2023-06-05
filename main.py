@@ -42,7 +42,7 @@ def get_conjunto_tarefas() -> list:
         tarefas.append(
             tarefa.replace('(','').replace(')','').replace(' ','').split(',')
         )
-    st.info(tarefas)
+    # st.info(tarefas)
     return tarefas
 
 
