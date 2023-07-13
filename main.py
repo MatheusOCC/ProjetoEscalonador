@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import numpy as np
 
 def cria_cabecalho():
     st.title('Projeto Escalonador')
@@ -57,7 +58,7 @@ def get_utilizacao_processador(df) -> bool:
     U = 0
     for ind in df.index:
         U = U + int(df['Custo'][ind]) / int(df['Período'][ind])
-    return (U <= 1)
+    return U
 
 
 def get_prioridade() -> str:
@@ -65,7 +66,7 @@ def get_prioridade() -> str:
         'Escolha a prioridade',
         options=["Prioridade Fixa", "Prioridade Dinâmica"]
     )
-    st.info(prioridade)
+    # st.info(prioridade)
     return prioridade
 
 
@@ -74,16 +75,44 @@ def get_algoritmo(prioridade) -> str:
         algoritmos=['EDF']
     else:
         algoritmos = ["Rate-Monotonic"]
-    st.info(algoritmos)
+    # st.info(algoritmos)
     return st.radio("Escolha o algoritmo",options=algoritmos)
 
 
-def rate_monotonic_scheduling(df) -> pd.DataFrame():
-    pass
+def rate_monotonic_scheduling(df) -> pd.DataFrame:
+    df = df.sort_values(by='Período')
+    df['Prioridade'] = df.index + 1
+
+    tempo_inicial = 0
+    df['Início'] = 0
+    df['Término'] = 0
+
+    for i, row in df.iterrows():
+        tempo_inicial = max(tempo_inicial, int(row['Período']))
+        df.at[i, 'Início'] = tempo_inicial
+        df.at[i, 'Término'] = tempo_inicial + int(row['Custo'])
+        tempo_inicial = df.at[i, 'Término']
+
+    st.write(df)
+    return df
 
 
-def earliest_deadline_first_scheduling(df) -> pd.DataFrame():
-    pass
+def earliest_deadline_first_scheduling(df) -> pd.DataFrame:
+    df = df.sort_values(by='Período')
+    df['Deadline'] = df['Período']
+
+    tempo_inicial = 0
+    df['Início'] = 0
+    df['Término'] = 0
+
+    for i, row in df.iterrows():
+        tempo_inicial = max(tempo_inicial, int(row['Período']))
+        df.at[i, 'Início'] = tempo_inicial
+        df.at[i, 'Término'] = tempo_inicial + int(row['Custo'])
+        tempo_inicial = df.at[i, 'Término']
+
+    st.write(df)
+    return df
  
 
 def esta_plenamente_utilizado() -> bool:
@@ -99,7 +128,8 @@ def main():
     tarefas = get_conjunto_tarefas()
     if tarefas[0][0]:
         df = cria_dataframe_tarefas(tarefas)
-        if not get_utilizacao_processador(df):
+        u = get_utilizacao_processador(df)
+        if not u < 1:
             st.warning(
                 '''
                 O Conjunto de tarefas não é Escalonável, 
@@ -107,8 +137,11 @@ def main():
                 '''
             )
         else:
+            st.success("Utilização: "+str(np.round(u,3)))
             prioridade = get_prioridade()
             algoritmos = get_algoritmo(prioridade)
+            rate_monotonic_scheduling(df) if algoritmos == "Prioridade Fixa" else earliest_deadline_first_scheduling(df)
+            return 1
 
 
 if __name__ == "__main__":
