@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import module 
 
 def cria_cabecalho():
     st.title('Projeto Escalonador')
@@ -124,6 +125,7 @@ def cria_gráfico(df) -> None:
 
 
 def main():
+    st.write('21:15')
     cria_cabecalho()
     tarefas = get_conjunto_tarefas()
     if tarefas[0][0]:
